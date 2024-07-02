@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: geonode
+    component: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geonode
+      component: redis
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geonode
+        component: redis
+    spec:
+      containers:
+        - command:
+            - /bin/sh
+            - -c
+            - |
+              redis-server --requirepass "$REDIS_PASSWORD" --appendonly yes
+          envFrom:
+            - configMapRef:
+                name: geonode--env
+          image: redis:latest
+          imagePullPolicy: IfNotPresent
+          name: redis
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "400m"
+            limits:
+              cpu: "1000m"
+              memory: "8Gi"
+status: {}

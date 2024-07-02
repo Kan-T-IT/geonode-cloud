@@ -1,0 +1,66 @@
+apiVersion: v1
+data:
+  default.conf: |-
+    js_import http.js;
+    js_set $decoded_target_url http.decoded_target_url;
+
+    server {
+        listen       8081;
+        server_name  0.0.0.0;
+        client_max_body_size 100M;
+
+        #Servimos todos los archivos estaticos de mapstore
+        location /static {
+        location ~* \.(?:html|js|jpg|jpeg|json|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)$ {
+            root   /usr/share/nginx/html;
+            gzip_static always;
+            expires 30d;
+            access_log off;
+            add_header Pragma "public";
+            add_header Cache-Control "max-age=31536000, public";
+          }
+        }
+
+        #Redireccionamos el intento de proxea al contenedor de django
+        location /mapstore/proxy/ {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $server_name;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+
+            rewrite ^/mapstore/proxy/? /proxy/ redirect;
+        }
+
+        location proxy/ {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $server_name;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            
+            proxy_pass $decoded_target_url;
+        }
+
+        #Tomamos los datos del geonode que necesitemos
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $server_name;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+      
+            proxy_pass http://django:8000;
+            #proxy_pass http://direccionURLdemiGeonode;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+    }
+kind: ConfigMap
+metadata:
+  name: mapstore-conf
+  namespace: default

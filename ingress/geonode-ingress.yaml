@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: geonode-network
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/client-max-body-size: "100M"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600s"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100M"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600s"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600s"
+
+    # Deshabilitar el redireccionamiento
+    nginx.ingress.kubernetes.io/proxy-redirect: "off"
+
+    # Configuración de CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "false"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Accept, Authorization, Origin, User-Agent"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, OPTIONS"
+
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - example.com
+    secretName: letsencrypt-prod
+  rules:
+  - host: example.com
+#  - host: "localhost"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mapstore
+            port:
+              number: 8081
+
+      - path: /uploaded/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mapstore
+            port:
+              number: 8081
+
+      - path: /uploaded/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mapstore
+            port:
+              number: 8081
+
+      - path: /celery/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: celery
+            port:
+              number: 8001
