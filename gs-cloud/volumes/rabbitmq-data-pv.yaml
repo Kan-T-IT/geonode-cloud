@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
   local:
-    path: /mnt/data/rabbitmq-data
+    path: KUBERNETES-VOL-DIR/rabbitmq-data
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -21,5 +21,5 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - master-node
+                - KUBERNETES-NODE-NAME
 

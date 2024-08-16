@@ -41,7 +41,7 @@ data:
   CELERY_BEAT_SCHEDULER: celery.beat:PersistentScheduler
   ASYNC_SIGNALS: "True"
   
-  SITEURL: https://example.com/
+  SITEURL: https://KUBERNETES-SITE-URL/
   
   ALLOWED_HOSTS: '[''django'', ''*'']'
   
@@ -60,30 +60,30 @@ data:
   # #################
   GEONODE_LB_HOST_IP: django
   GEONODE_LB_PORT: "8000"
-  GEOSERVER_LB_HOST_IP: example.com
+  GEOSERVER_LB_HOST_IP: geoserver
   GEOSERVER_LB_PORT: "8080"
-  NGINX_BASE_URL: example.com
+  NGINX_BASE_URL: KUBERNETES-SITE-URL
 
   # IP or domain name and port where the server can be reached on HTTPS# port where the server can be reached on HTTPS
   #HTTP_HOST:
-  HTTPS_HOST: "example.com"
+  HTTPS_HOST: "KUBERNETES-SITE-URL"
 
   HTTP_PORT: "80"
   HTTPS_PORT: "443"
 
   # Let's Encrypt certificates for https encryption. You must have a do# with an ip) and it must be reachable from the outside. This can be
   # disabled : we do not get a certificate at all (a placeholder certif# staging : we get staging certificates (are invalid, but allow to te# production : we get a normal certificate (default)
-  LETSENCRYPT_MODE: disabled
-  # LETSENCRYPT_MODE=staging
-  # LETSENCRYPT_MODE=production
+  CLUSTER-ISSUER-NAME_MODE: disabled
+  # CLUSTER-ISSUER-NAME_MODE=staging
+  # CLUSTER-ISSUER-NAME_MODE=production
   
   RESOLVER: 10.96.0.10
   
   # #################
   # geoserver
   # #################
-  GEOSERVER_WEB_UI_LOCATION: https://example.com/geoserver/
-  GEOSERVER_PUBLIC_LOCATION: https://example.com/geoserver/
+  GEOSERVER_WEB_UI_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
+  GEOSERVER_PUBLIC_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
   GEOSERVER_LOCATION: http://gateway:8080/geoserver/
   GEOSERVER_ADMIN_USER: admin
   GEOSERVER_ADMIN_PASSWORD: geoserver
@@ -98,7 +98,7 @@ data:
   # catalogue
   # #################
   CATALOGUE_ENGINE: geonode.catalogue.backends.pycsw_local
-  CATALOGUE_URL: https://example.com/catalogue/csw
+  CATALOGUE_URL: https://KUBERNETES-SITE-URL/catalogue/csw
 
   # #################
   # redis_cache
@@ -117,7 +117,7 @@ data:
   
   ADMIN_USERNAME: admin
   ADMIN_PASSWORD: admin
-  ADMIN_EMAIL: example@example.com
+  ADMIN_EMAIL: kan@kan.com
   
   # Cookie expiration time
   SESSION_COOKIE_AGE: "86400"
@@ -228,7 +228,7 @@ data:
   DEFAULT_MAX_PARALLEL_UPLOADS_PER_USER: "100"
    
   #ACL Client
-  ACL_HOST: https://example.com/acl/api
+  ACL_HOST: https://KUBERNETES-SITE-URL/acl/api
   ACL_USERNAME: admin
   ACL_PASSWORD: s3cr3t
 

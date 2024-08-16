@@ -19,6 +19,8 @@ spec:
         app: geonode
         component: django
     spec:
+      imagePullSecrets:
+      - name: registrykey
       containers:
         - args:
             - uwsgi

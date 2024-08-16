@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
   local:
-    path: /mnt/data/tmp
+    path: KUBERNETES-VOL-DIR/tmp
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -21,4 +21,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - master-node
+                - KUBERNETES-NODE-NAME

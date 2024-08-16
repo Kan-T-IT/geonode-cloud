@@ -9,4 +9,4 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 168.197.51.25/32
+      - SERVER-PUBLIC-IP/32

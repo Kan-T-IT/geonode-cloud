@@ -12,16 +12,17 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600s"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600s"
 
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "CLUSTER-ISSUER-NAME"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - example.com
-    secretName: letsencrypt-prod
+    - KUBERNETES-SITE-URL
+    secretName: CLUSTER-ISSUER-NAME
   rules:
-  - host: example.com
+  - host: KUBERNETES-SITE-URL
+#  - host: "localhost"
     http:
       paths:
       - path: /geoserver

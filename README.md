@@ -16,8 +16,8 @@ The project structure for deploying GeoNode Cloud and GeoServer Cloud on Kuberne
 
 * gn-cloud
 * gs-cloud
-* ingress
-* secrets
+* configs
+* database
 
 ## Architecture & Technology
 
@@ -38,31 +38,65 @@ The project structure for deploying GeoNode Cloud and GeoServer Cloud on Kuberne
 
 *GeoNode Cloud* licensed under the [GPLv2](LICENSE.txt).
 
+## Requisites
+
+* MicroK8S.
+    * Ingress module.
+    * DNS module.
+    * Cert-manager module.
+
+
+### Use snap to install microk8s
+```bash
+sudo snap install microk8s --classic
+```
+
+### Enable necesary micro8s modules
+
+```bash
+microk8s enable ingress
+microk8s enable cert-manager
+```
+
+### Create certmanager config to enable letsencrypt using your own email
+```bash
+microk8s kubectl apply -f - <<EOF
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    email: YOUREMAIL@DOMAIN.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: letsencrypt-account-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: public
+EOF
+```
+
 ## Deployment
 
-1. In `/mnt/data`:
+### Clone this repository
 
-``` bash
-mkdir -p ./dbdata ./geowebcache-data ./rabbitmq-data ./statics ./tmp
+```bash
+git clone https://github.com/Kan-T-IT/geonode-cloud.git && cd geonode-cloud
 ```
 
-2. In the cloned folder we start the services "secrets", "ingress", "certs" and "StorageClass"
-
+### Edit all fields in .env file with the necesary information.
+```env
+KUBERNETES_SITE_URL=GEONODE_CLOUD_FINAL_URL    # i.e.: cloud.mygeonode.com
+KUBERNETES_NODE_NAME=YOUR_CLUSTER_NAME_NAME    # usually host machine name
+KUBERNETES_VOL_DIR=YOUR_DESIRED_LOCATION       # this path shold exist
+CLUSTER_ISSUER_NAME=YOUR_CLUSTER_ISSUER_NAME   # created earlier in this guide
+SERVER_PUBLIC_IP=YOU.RPU.BLI.CIP               # the public ipv4 of the server                 
+GEONODE_PASSWORD=admin                         # password for geonode admin user 
+GEOSERVER_PASSWORD=geoserver                   # password for geoserver admin user
 ```
-kubectl apply -f secrets
-kubectl apply -f ingress
-kubectl apply -f certs
-kubectl apply -f StorageClass
-```
-
-3. Start up the database
-
-`kubectl apply -R -f database`
-
-4. Start up the gn-cloud service
-
-`kubectl apply -R -f gn-cloud`
-
-5. Start up the gs-cloud service
-
-`kubectl apply -R -f gs-cloud`
+### Run `./install.sh` and enjoy.
