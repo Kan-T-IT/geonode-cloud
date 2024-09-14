@@ -4,7 +4,7 @@
 
 # GeoNode Cloud
 
-<i>**GeoNode Cloud**</i> is an advanced implementation of the GeoNode platform in the cloud, focused on maximizing the use of native or adapted technologies for cloud environments. This solution is designed to be deployed on Kubernetes, which facilitates its scalability, management and resilience.
+<i>**GeoNode Cloud**</i> is an advanced implementation of the [GeoNode](https://github.com/GeoNode/geonode) platform in the cloud, focused on maximizing the use of native or adapted technologies for cloud environments. This solution is designed to be deployed on Kubernetes, which facilitates its scalability, management and resilience.
 GeoNode Cloud incorporates the [GeoServer Cloud](https://github.com/geoserver/geoserver-cloud) project, which provides robust support for the publication, editing and management of geospatial data, thus reinforcing its purpose of offering a modern and efficient infrastructure for the management of geospatial information in the cloud.
 With GeoNode Cloud, organizations can benefit from greater flexibility, reduced operational costs, and seamless integration with other cloud-native tools and services.
 
@@ -21,22 +21,64 @@ The project structure for deploying GeoNode Cloud and GeoServer Cloud on Kuberne
 
 ## Architecture & Technology
 
-* Django Geonode
-    * Django Framework
-    * Memcached
-    * Geonode Import
-    * pyCSW
-* GeoNode Mapstore Client
-* Celery Geonode
-* Rabbitmq
-* GeoServer Cloud
-* Postgres with PostGis extension
-* Nginx
-* Flower
+
+The solution architecture is divided into the following components: 
+
+* [Geonode Cloud Core](https://github.com/Kan-T-IT/geonode-cloud-core)
+* [GeoNode Cloud Mapstore Client](https://github.com/Kan-T-IT/geonode-cloud-mapstore-client)
+* [Rabbitmq](https://github.com/rabbitmq)
+* [GeoServer Cloud](https://github.com/geoserver/geoserver-cloud)
+* [Postgres](https://github.com/postgres) with PostGis extension
+* [Nginx](https://github.com/nginx/nginx)
+* [Flower](https://github.com/mher/flower)
+
+Specifically **Geonode Cloud Core** contains the following main technological components for its operation: 
+
+* Django Framework
+* Memcached
+* Geonode Import
+* [pyCSW](https://github.com/geopython/pycsw)
+* Celery
+* [Geoserver App Django - ACL Capability](https://github.com/Kan-T-IT/geonode-cloud-core/tree/main/geonode/geoserver/acl) 
+
+The architecture is based on the use of microservices, where it is planned to incorporate new microservices that today are in the monolithic component of Django. 
+
 
 ## License
 
 *GeoNode Cloud* licensed under the [GPLv2](LICENSE.txt).
+
+## Distribution and deployment
+
+Docker images for all the services are available on DockerHub, under the [KAN Territory & IT organization](https://hub.docker.com/u/kantit).
+
+You can find  production-suitable deployment files for docker-compose and podman under the [docs/deploy](docs/deploy) folder.
+
+
+## Contributing
+
+Please read [the contribution guidelines](CONTRIBUTING.md) before contributing pull requests to the Geonode Cloud project.
+
+Follow the [developer's guide]() to know more about the project's technical details.
+
+## Status
+
+Read the [changelog](https://github.com/Kan-T-IT/geonode-cloud/releases) for more information.
+
+
+## Bugs
+
+*GeoNode Cloud*'s issue tracking is at this [Issues GitHub](https://github.com/Kan-T-IT/geonode-cloud/issues) repository.
+
+## Roadmap
+
+TDB
+
+# Deployment
+
+For the deployment of Geonode Cloud we can deploy it on different Kubernete platforms, here are the details of the deployment on MickoK8S 
+
+## Deployment on MicroK8S
 
 ## Requisites
 
