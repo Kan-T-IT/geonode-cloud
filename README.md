@@ -44,10 +44,6 @@ Specifically **Geonode Cloud Core** contains the following main technological co
 The architecture is based on the use of microservices, where it is planned to incorporate new microservices that today are in the monolithic component of Django. 
 
 
-## License
-
-*GeoNode Cloud* licensed under the [GPLv2](LICENSE.txt).
-
 ## Distribution and deployment
 
 Docker images for all the services are available on DockerHub, under the [KAN Territory & IT organization](https://hub.docker.com/u/kantit).
