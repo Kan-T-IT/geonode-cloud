@@ -1,0 +1,64 @@
+name: Sync Issues to Redmine
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  sync_with_redmine:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Set up environment
+      run: |
+        REDMINE_PROJECT_ID=geonode-cloud
+        REDMINE_API_URL=https://redmine.kan.com.ar
+        GITHUB_ISSUE_NUMBER=${{ github.event.issue.number }}
+        GITHUB_ISSUE_TITLE="${{ github.event.issue.title }}"
+        GITHUB_ISSUE_BODY="${{ github.event.issue.body }}"
+        GITHUB_ISSUE_URL="${{ github.event.issue.html_url }}"
+        GITHUB_ISSUE_LABELS=$(echo "${{ github.event.issue.labels }}" | jq '.[].name')
+        GITHUB_ISSUE_MILESTONE="${{ github.event.issue.milestone.title }}"
+
+        # Default values for tracker_id and fixed_version_id
+        TRACKER_ID=1  # Default to bug
+        FIXED_VERSION_ID=1858  # Default to version 1.0.0
+
+        # Assign the tracker_id based on the label
+        if echo "$GITHUB_ISSUE_LABELS" | grep -q "enhancement"; then
+          TRACKER_ID=2
+        fi
+
+        # Assign the fixed_version_id based on the milestone
+        if [[ "$GITHUB_ISSUE_MILESTONE" == "1.1.0" ]]; then
+          FIXED_VERSION_ID=1859
+        elif [[ "$GITHUB_ISSUE_MILESTONE" == "2.0.0" ]]; then
+          FIXED_VERSION_ID=1860
+        fi
+  
+
+        # Export these variables so they can be used in the next steps
+        echo "TRACKER_ID=$TRACKER_ID" >> $GITHUB_ENV
+        echo "FIXED_VERSION_ID=$FIXED_VERSION_ID" >> $GITHUB_ENV
+        echo "GITHUB_ISSUE_NUMBER=$GITHUB_ISSUE_NUMBER" >> $GITHUB_ENV
+        echo "GITHUB_ISSUE_TITLE=$GITHUB_ISSUE_TITLE" >> $GITHUB_ENV
+        echo "GITHUB_ISSUE_BODY=$GITHUB_ISSUE_BODY" >> $GITHUB_ENV
+        echo "GITHUB_ISSUE_URL=$GITHUB_ISSUE_URL" >> $GITHUB_ENV
+
+    - name: Sync issue to Redmine
+      env:
+        REDMINE_API_TOKEN: ${{ secrets.REDMINE_API_TOKEN }}
+      run: |
+        curl -X POST "${REDMINE_API_URL}/issues.json" \
+        -H "Content-Type: application/json" \
+        -H "X-Redmine-API-Key: $REDMINE_API_TOKEN" \
+        -d '{
+              "issue": {
+                "project_id": "'${REDMINE_PROJECT_ID}'",
+                "subject": "'${GITHUB_ISSUE_TITLE}'",
+                "description": "GitHub Issue URL: '${GITHUB_ISSUE_URL}'\n\nIssue body:\n\n'${GITHUB_ISSUE_BODY}'",
+                "tracker_id": '${TRACKER_ID}',
+                "category_id": 373,
+                "fixed_version_id": '${FIXED_VERSION_ID}'
+              }
+            }'
