@@ -11,3 +11,4 @@ spec:
       targetPort: 8000
   selector:
     component: django
+  type: ClusterIP

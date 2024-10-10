@@ -11,5 +11,6 @@ spec:
   - name: "8080"
     port: 8080
     targetPort: 8080
+  type: LoadBalancer  # Se agrega el tipo LoadBalancer para que sea accesible desde fuera del clúster
 status:
   loadBalancer: {}

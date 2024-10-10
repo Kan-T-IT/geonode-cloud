@@ -14,5 +14,4 @@ spec:
   - name: "8081"
     port: 8081
     targetPort: 8081
-status:
-  loadBalancer: {}
+  type: ClusterIP

@@ -11,8 +11,4 @@ spec:
   resources:
     requests:
       storage: 100Mi
-  storageClassName: local-storage
-  selector:
-    matchLabels:
-      name: geowebcache-data-pv
-
+  storageClassName: gp3  # Cambiar a una clase de almacenamiento de EKS

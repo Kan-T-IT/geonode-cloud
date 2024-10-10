@@ -62,7 +62,7 @@ data:
   GEONODE_LB_PORT: "8000"
   GEOSERVER_LB_HOST_IP: geoserver
   GEOSERVER_LB_PORT: "8080"
-  NGINX_BASE_URL: KUBERNETES-SITE-URL
+  NGINX_BASE_URL: kube-qa.kan.com.ar
 
   # IP or domain name and port where the server can be reached on HTTPS# port where the server can be reached on HTTPS
   #HTTP_HOST:
@@ -73,17 +73,17 @@ data:
 
   # Let's Encrypt certificates for https encryption. You must have a do# with an ip) and it must be reachable from the outside. This can be
   # disabled : we do not get a certificate at all (a placeholder certif# staging : we get staging certificates (are invalid, but allow to te# production : we get a normal certificate (default)
-  CLUSTER-ISSUER-NAME_MODE: disabled
-  # CLUSTER-ISSUER-NAME_MODE=staging
-  # CLUSTER-ISSUER-NAME_MODE=production
+  letsencrypt_MODE: disabled
+  # letsencrypt_MODE=staging
+  # letsencrypt_MODE=production
   
   RESOLVER: 10.96.0.10
   
   # #################
   # geoserver
   # #################
-  GEOSERVER_WEB_UI_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
-  GEOSERVER_PUBLIC_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
+  GEOSERVER_WEB_UI_LOCATION: "KUBERNETES-SITE-URL"/geoserver/
+  GEOSERVER_PUBLIC_LOCATION: "KUBERNETES-SITE-URL"/geoserver/
   GEOSERVER_LOCATION: http://gateway:8080/geoserver/
   GEOSERVER_ADMIN_USER: admin
   GEOSERVER_ADMIN_PASSWORD: geoserver
@@ -98,7 +98,7 @@ data:
   # catalogue
   # #################
   CATALOGUE_ENGINE: geonode.catalogue.backends.pycsw_local
-  CATALOGUE_URL: https://KUBERNETES-SITE-URL/catalogue/csw
+  CATALOGUE_URL: "KUBERNETES-SITE-URL"/catalogue/csw
 
   # #################
   # redis_cache
@@ -116,7 +116,7 @@ data:
   # otherwise the invoke updateadmin task will be skipped and the curre# in DB will honored
   
   ADMIN_USERNAME: admin
-  ADMIN_PASSWORD: admin
+  ADMIN_PASSWORD: sP5HiwCMfw5tND7LSs
   ADMIN_EMAIL: kan@kan.com
   
   # Cookie expiration time
@@ -226,26 +226,26 @@ data:
   # Upload Size Limiting
   DEFAULT_MAX_UPLOAD_SIZE: "5368709120"
   DEFAULT_MAX_PARALLEL_UPLOADS_PER_USER: "100"
-   
+
+  # #################
+  # KAN variables
+  # #################
+
+  # Base maps
+  USE_ARGENMAP_BASE_MAP: "True"
+
+  # Extra modules, here you can define extra django modules to geonode, with custom urls, i.e.:
+
+  # EXTRA_CONTRIB_APPS='["geonode.my_foo_module"]'                  <-- Module package
+  # EXTRA_CONTRIB_URLS='[["^foo/","geonode.my_foo_module.urls"]]'   <-- ^Endpoint/ package.urls
+
+  EXTRA_CONTRIB_APPS: '[""]'
+  EXTRA_CONTRIB_URLS: '[["",""]]'
+
   #ACL Client
-  ACL_HOST: https://KUBERNETES-SITE-URL/acl/api
+  ACL_HOST: "KUBERNETES-SITE-URL"/acl/api
   ACL_USERNAME: admin
   ACL_PASSWORD: s3cr3t
-
-  ##########
-  #Basemaps#
-  ##########
-
-  NUM_MAP_BASES: '4'
-
-  # Argenmap
-  MAP_BASE_1_CONFIG: "{\"type\": \"wms\", \"title\": \"Argenmap\", \"format\": \"image/jpeg\", \"id\": \"capabaseargenmap\", \"name\": \"capabaseargenmap\", \"url\": \"https://wms.ign.gob.ar/geoserver/wms\", \"group\": \"background\", \"thumbURL\": \"[SITEURL]static/mapstorestyle/img/argenmap.png\", \"visibility\": true}"
-  # Open street
-  MAP_BASE_2_CONFIG: "{\"type\": \"osm\", \"title\": \"Open Street Map\", \"name\": \"mapnik\", \"source\": \"osm\", \"group\": \"background\", \"visibility\": false}"
-  # Open topo
-  MAP_BASE_3_CONFIG: "{\"type\": \"tileprovider\", \"title\": \"OpenTopoMap\", \"provider\": \"OpenTopoMap\", \"name\": \"OpenTopoMap\", \"source\": \"OpenTopoMap\", \"group\": \"background\", \"visibility\": false}"
-  # Sentinel
-  MAP_BASE_4_CONFIG: "{\"type\": \"wms\", \"title\": \"Sentinel-2 cloudless - https://s2maps.eu\", \"format\": \"image/jpeg\", \"id\": \"s2cloudless\", \"name\": \"s2cloudless:s2cloudless\", \"url\": \"https://maps.geosolutionsgroup.com/geoserver/wms\", \"group\": \"background\", \"thumbURL\": \"[SITEURL]static/mapstorestyle/img/s2cloudless-s2cloudless.png\", \"visibility\": false}"
 
 kind: ConfigMap
 metadata:

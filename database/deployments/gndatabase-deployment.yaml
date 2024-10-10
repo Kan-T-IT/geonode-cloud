@@ -50,5 +50,4 @@ spec:
       volumes:
         - name: dbdata
           persistentVolumeClaim:
-            claimName: dbdata
-status: {}
+            claimName: dbdata-pvc  # Este nombre hace referencia al PVC que veremos a continuación

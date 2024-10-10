@@ -11,5 +11,6 @@ spec:
   - name: "5432"
     port: 5432
     targetPort: 5432
+  type: ClusterIP  # Se asegura que solo sea accesible dentro del clúster
 status:
   loadBalancer: {}

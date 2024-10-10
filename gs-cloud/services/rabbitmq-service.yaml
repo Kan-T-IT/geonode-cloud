@@ -14,5 +14,6 @@ spec:
   - name: "15672"
     port: 15672
     targetPort: 15672
+  type: LoadBalancer  # Configurado para ser accesible desde fuera
 status:
   loadBalancer: {}

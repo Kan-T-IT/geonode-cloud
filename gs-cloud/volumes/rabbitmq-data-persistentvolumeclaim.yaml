@@ -11,8 +11,4 @@ spec:
   resources:
     requests:
       storage: 100Mi
-  storageClassName: local-storage
-  selector:
-    matchLabels:
-      name: rabbitmq-data-pv
-status: {}
+  storageClassName: gp3  # Cambiar a clase de almacenamiento EKS

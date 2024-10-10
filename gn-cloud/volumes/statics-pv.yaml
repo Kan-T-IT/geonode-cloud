@@ -11,14 +11,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: local-storage
-  local:
-    path: KUBERNETES-VOL-DIR/statics
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - KUBERNETES-NODE-NAME
+  storageClassName: gp3

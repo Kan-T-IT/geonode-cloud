@@ -7,11 +7,8 @@ metadata:
   name: tmp
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi
-  storageClassName: local-storage
-  selector:
-    matchLabels:
-      name: tmp-pv
+  storageClassName: gp3
