@@ -19,7 +19,7 @@ jobs:
 
     - name: Install k8s-api-docgen
       run: |
-        git clone https://github.com/EnterpriseDB/k8s-api-docgen.git
+        git clone --recurse-submodules https://github.com/EnterpriseDB/k8s-api-docgen.git
         cd k8s-api-docgen
         go build -o k8s-api-docgen
 
