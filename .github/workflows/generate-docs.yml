@@ -1,0 +1,34 @@
+name: Generate Kubernetes Docs
+on:
+  push:
+    branches:
+      - doc
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install k8s-docgen
+      run: npm install -g k8s-docgen
+
+    - name: Generate documentation
+      run: k8s-docgen generate -o ./docs
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.email "docs-bot@kan.com.ar"
+        git config --global user.name "Docs Bot"
+        git add docs/
+        git commit -m "Automated documentation update"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
