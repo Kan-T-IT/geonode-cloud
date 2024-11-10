@@ -9,20 +9,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout del repositorio
-      uses: actions/checkout@v4
+    - name: Checkout of repository
+      uses: actions/checkout@v3
 
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
+    - name: Configuration go
+      uses: actions/setup-go@v4
       with:
-        node-version: '20'
-         
-    - name: Install k8s-docgen
-      run: npm install -g k8s-docgen
+        go-version: '1.20'
 
-    - name: Generate documentation
-      run: k8s-docgen generate -o ./docs
+    - name: Install k8s-api-docgen
+      run: |
+        git clone https://github.com/EnterpriseDB/k8s-api-docgen.git
+        cd k8s-api-docgen
+        go build -o k8s-api-docgen
 
+    - name: Generar documentación
+      run: |
+        ./k8s-api-docgen -o ./docs ./
+    
     - name: Commit and push changes
       run: |
         git config --global user.email "docs-bot@kan.com.ar"
