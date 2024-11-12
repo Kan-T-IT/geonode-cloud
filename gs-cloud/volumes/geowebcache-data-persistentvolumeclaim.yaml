@@ -10,5 +10,5 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
-  storageClassName: gp3  # Cambiar a una clase de almacenamiento de EKS
+      storage: 2Gi  # Ajustado a 2Gi para mayor capacidad
+  storageClassName: gp3  # Clase de almacenamiento en EKS

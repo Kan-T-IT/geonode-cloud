@@ -20,7 +20,7 @@ spec:
         component: celery
     spec:
       imagePullSecrets:
-      - name: registrykey
+        - name: registrykey  # Añadido para autenticación en el registro de imágenes
       containers:
         - args:
             - celery-cmd
@@ -34,11 +34,11 @@ spec:
           name: celery4geonode
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "400m"
+              memory: "500Mi"
+              cpu: "100m"
             limits:
-              cpu: "1000m"
-              memory: "8Gi"
+              cpu: "500m"
+              memory: "1Gi"
           volumeMounts:
             - mountPath: /mnt/volumes/statics
               name: statics

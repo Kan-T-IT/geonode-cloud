@@ -19,8 +19,6 @@ spec:
         app: geonode
         component: django
     spec:
-      imagePullSecrets:
-        - name: registrykey  # Añadido para autenticación en el registro de imágenes    
       containers:
         - args:
             - uwsgi
@@ -49,7 +47,8 @@ spec:
       volumes:
         - name: statics
           persistentVolumeClaim:
-            claimName: statics-django
+            claimName: statics
         - name: tmp
           persistentVolumeClaim:
-            claimName: tmp-django
+            claimName: tmp
+status: {}

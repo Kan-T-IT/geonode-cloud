@@ -44,11 +44,11 @@ spec:
         name: wcs
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Reducido
+            cpu: "150m"
           limits:
-            cpu: "1500m"
-            memory: "4Gi"
+            cpu: "1000m"    # Reducido
+            memory: "1Gi"
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -69,4 +69,3 @@ spec:
         configMap:
           name: geoserver-configmap
 status: {}
-

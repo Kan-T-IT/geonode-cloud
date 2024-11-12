@@ -49,11 +49,11 @@ spec:
         name: gwc
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "300Mi"  # Solicitud de memoria reducida
+            cpu: "100m"
           limits:
-            cpu: "3000m"
-            memory: "2Gi"
+            cpu: "500m"      # Límite máximo ajustado para reducir uso de CPU
+            memory: "750Mi"   # Límite máximo reducido para el entorno de prueba
         volumeMounts:
         - name: geowebcache-data
           mountPath: /opt/app/data_directory/gwc
@@ -71,7 +71,7 @@ spec:
       volumes:
       - name: geowebcache-data
         persistentVolumeClaim:
-          claimName: geowebcache-data
+          claimName: geowebcache-data-gwc
       - name: geoserver
         configMap:
           name: geoserver-configmap

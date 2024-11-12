@@ -44,11 +44,11 @@ spec:
         name: wms
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Reducido para entorno de prueba
+            cpu: "150m"
           limits:
-            cpu: "4000m"
-            memory: "4Gi"
+            cpu: "1000m"    # Reducido
+            memory: "1Gi"
         securityContext:
           runAsUser: 0
           runAsGroup: 0

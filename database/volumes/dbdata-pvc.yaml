@@ -7,5 +7,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 8Gi  # Cambiado a 8Gi para mejor almacenamiento en producción
-  storageClassName: gp2  # StorageClass estándar de AWS para EBS
+      storage: 1Gi  # Cambiado a 8Gi para mejor almacenamiento en producción
+  storageClassName: gp3  # StorageClass estándar de AWS para EBS

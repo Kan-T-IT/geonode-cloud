@@ -24,17 +24,17 @@ spec:
         - name: PG_HOST
           valueFrom:
             configMapKeyRef:
-              key:  PG_HOST
+              key: PG_HOST
               name: geoserver--env
         - name: PG_PORT
           valueFrom:
             configMapKeyRef:
-              key:  PG_PORT
+              key: PG_PORT
               name: geoserver--env
         - name: PG_DB
           valueFrom:
             configMapKeyRef:
-              key:  POSTGRES_DB
+              key: POSTGRES_DB
               name: geoserver--env
         - name: PG_USERNAME
           valueFrom:
@@ -83,11 +83,11 @@ spec:
         - containerPort: 5432
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Reducido para entorno de prueba
+            cpu: "100m"
           limits:
-            cpu: "1500m"
-            memory: "4Gi"
+            cpu: "500m"      # Ajustado para instancias t3.medium
+            memory: "1Gi"
         volumeMounts:
         - name: acl
           mountPath: "/opt/app/bin/acl.yml"

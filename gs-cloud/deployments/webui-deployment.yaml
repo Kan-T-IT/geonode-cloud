@@ -41,11 +41,11 @@ spec:
         name: webui
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "200Mi"   # Aún más reducido para pruebas
+            cpu: "50m"
           limits:
-            cpu: "4000m"
-            memory: "6Gi"
+            cpu: "200m"       # Máximo de 0.2 vCPU
+            memory: "512Mi"   # Límite de memoria en 512Mi
         volumeMounts:
         - name: geowebcache-data
           mountPath: /data/geowebcache

@@ -1,0 +1,38 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: testGeonode
+  region: us-east-1
+  version: "1.31"
+
+vpc:
+  # id: vpc-xxxxxxxx
+  # subnets:
+  #   private:
+  #     us-east-1a:
+  #       id: subnet-xxxxxxxx
+  #     us-east-1b:
+  #       id: subnet-xxxxxxxx
+  #     us-east-1c:
+  #       id: subnet-xxxxxxxx
+
+availabilityZones: ["us-east-1a", "us-east-1b"] 
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 3
+    minSize: 3
+    maxSize: 3
+    volumeSize: 20  # Tamaño del volumen en GB por nodo.
+    iam:
+      withAddonPolicies:
+        albIngress: true       # Permite la gestión de Application Load Balancers.
+        externalDNS: true      # Permite la gestión de DNS externo.
+    labels:
+      role: worker
+    tags:
+      kubernetes.io/cluster/testGeonode: "owned"
+      Environment: production
+    privateNetworking: false  # false los lanza en publicas, true en privadas

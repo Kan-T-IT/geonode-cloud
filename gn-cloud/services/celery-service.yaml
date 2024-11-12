@@ -6,8 +6,8 @@ metadata:
     component: celery
 spec:
   ports:
-    - name: "8000"
-      port: 8000
-      targetPort: 8000
+    - name: "8001"
+      port: 8001
+      targetPort: 8001
   selector:
     component: celery

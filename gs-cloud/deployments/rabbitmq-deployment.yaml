@@ -30,11 +30,11 @@ spec:
         - containerPort: 15692
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Ajuste de memoria para reducir el consumo
+            cpu: "100m"       # Ajuste de CPU mínimo para entornos de prueba
           limits:
-            cpu: "1500m"
-            memory: "2Gi"
+            cpu: "500m"       # Reducido para mejorar la asignación en instancias limitadas
+            memory: "1Gi"     # Memoria límite ajustada para evitar posibles problemas de consumo
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
@@ -42,9 +42,7 @@ spec:
           runAsUser: 0
           runAsGroup: 0
       restartPolicy: Always
-      serviceAccountName: ""
       volumes:
       - name: rabbitmq-data
         persistentVolumeClaim:
           claimName: rabbitmq-data
-status: {}

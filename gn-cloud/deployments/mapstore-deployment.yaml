@@ -20,17 +20,18 @@ spec:
         component: mapstore
     spec:
       imagePullSecrets:
-      - name: registrykey
+        - name: registrykey
       containers:
-        - workingDir: /geonode-mapstore-client/geonode_mapstore_client/client
-          image: registry.kan.com.ar/kan/geoexpressportal/geonode-mapstore-client:4.2.0.0-cmd
+        - name: mapstore4geonode
+          workingDir: /geonode-mapstore-client/geonode_mapstore_client/client
+          image: registry.kan.com.ar/kan/geoexpressportal/geonode-mapstore-client:4.2.0.2
           imagePullPolicy: IfNotPresent
-          name: mapstore4geonode
+          command: ["node", "--max-old-space-size=2048", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/.bin/webpack", "serve", "--progress", "--color", "--port", "8081", "--hot", "--inline", "--config", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/@mapstore/project/types/standard/config/webpack.config.js"]
           resources:
             requests:
               memory: "1Gi"
-              cpu: "200m"
+              cpu: "500m"
             limits:
-              cpu: "400m"
               memory: "2Gi"
+              cpu: "1"
 status: {}

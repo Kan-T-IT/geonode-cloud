@@ -33,9 +33,9 @@ spec:
           name: memcached4geonode
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "400m"
+              memory: "100Mi"
+              cpu: "100m"
             limits:
-              cpu: "1000m"
-              memory: "8Gi"
+              cpu: "500m"
+              memory: "500Mi"
 status: {}

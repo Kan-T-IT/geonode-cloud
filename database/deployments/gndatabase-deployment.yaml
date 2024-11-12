@@ -27,6 +27,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: gndatabase--env
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata  # Configura un subdirectorio para evitar conflictos
           image: postgis/postgis:15-master
           livenessProbe:
             exec:
@@ -39,15 +42,15 @@ spec:
           name: db4geonode
           resources:
             requests:
-              memory: "3Gi"
-              cpu: "400m"
+              memory: "500Mi"
+              cpu: "200m"
             limits:
-              cpu: "1000m"
-              memory: "8Gi"
+              memory: "1Gi"
+              cpu: "500m"
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgresql/data  # Monta el PVC aquí
               name: dbdata
       volumes:
         - name: dbdata
           persistentVolumeClaim:
-            claimName: dbdata-pvc  # Este nombre hace referencia al PVC que veremos a continuación
+            claimName: dbdata-pvc

@@ -14,6 +14,4 @@ spec:
   - name: "8081"
     port: 8081
     targetPort: 8081
-  type: LoadBalancer  # Configuración para acceso externo
-status:
-  loadBalancer: {}
+  type: ClusterIP
