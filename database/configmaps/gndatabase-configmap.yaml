@@ -19,7 +19,7 @@ data:
   CELERY_BEAT_SCHEDULER: celery.beat:PersistentScheduler
   ASYNC_SIGNALS: "True"
 
-  SITEURL: http://k8s-default-geonodei-fad21a892a-734308565.us-east-1.elb.amazonaws.com/
+  SITEURL: http://eks.kan.com.ar/
 
   # PostgreSQL
   POSTGRESQL_MAX_CONNECTIONS: "200"

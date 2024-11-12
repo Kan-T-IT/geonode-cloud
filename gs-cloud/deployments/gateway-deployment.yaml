@@ -25,7 +25,7 @@ spec:
             configMapKeyRef:
               key: GATEWAY_SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-gateway:1.8.10
+        image: geoservercloud/geoserver-cloud-gateway:1.9-RC3
         imagePullPolicy: "IfNotPresent"
         name: gateway
         ports:

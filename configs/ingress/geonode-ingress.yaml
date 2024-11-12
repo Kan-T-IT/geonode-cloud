@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/ip-address-type: ipv4
+    alb.ingress.kubernetes.io/ip-address-type: ipv4 # <-- Añadir esto aquí dualstack
     alb.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
   rules:
@@ -19,28 +19,7 @@ spec:
             name: gateway
             port:
               number: 8080
-      - path: /static/mapstore/dist/js/
-        pathType: Prefix
-        backend:
-          service:
-            name: mapstore
-            port:
-              number: 8081
-      - path: /static/mapstore/dist/css/
-        pathType: Prefix
-        backend:
-          service:
-            name: mapstore
-            port:
-              number: 8081
-      - path: /static/mapstore/dist/images/
-        pathType: Prefix
-        backend:
-          service:
-            name: mapstore
-            port:
-              number: 8081
-      - path: /static/mapstore/
+      - path: /static/mapstore
         pathType: Prefix
         backend:
           service:

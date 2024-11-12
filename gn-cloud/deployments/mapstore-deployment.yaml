@@ -24,7 +24,7 @@ spec:
       containers:
         - name: mapstore4geonode
           workingDir: /geonode-mapstore-client/geonode_mapstore_client/client
-          image: registry.kan.com.ar/kan/geoexpressportal/geonode-mapstore-client:4.2.0.2
+          image: kantit/geonode-cloud-mapstore-client:1.0.0-rc1
           imagePullPolicy: IfNotPresent
           command: ["node", "--max-old-space-size=2048", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/.bin/webpack", "serve", "--progress", "--color", "--port", "8081", "--hot", "--inline", "--config", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/@mapstore/project/types/standard/config/webpack.config.js"]
           resources:

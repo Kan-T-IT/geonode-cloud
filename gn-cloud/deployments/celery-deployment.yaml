@@ -29,7 +29,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: geonode--env
-          image: registry.kan.com.ar/kan/geoexpressportal/geonode-cloud:4.2.4.0-01
+          image: kantit/geonode-cloud-core:1.0.0-rc1
           imagePullPolicy: IfNotPresent
           name: celery4geonode
           resources:
