@@ -138,3 +138,46 @@ GEONODE_PASSWORD=admin                         # password for geonode admin user
 GEOSERVER_PASSWORD=geoserver                   # password for geoserver admin user
 ```
 ### Run `./install.sh` and enjoy.
+
+---
+
+## Deployment on EKS
+
+### Prerequisites
+
+Ensure that the EKS cluster is up and running and configured with the following:
+
+1. **OIDC Provider and IAM**: Configure the OIDC provider for the EKS cluster.
+2. **IAM Service Account for AWS Load Balancer Controller**: Create the IAM service account and attach the necessary policies.
+3. **Necessary Addons**: Install AWS Load Balancer Controller and EBS CSI Driver.
+
+### Despliegue de Recursos Kubernetes
+
+To deploy the necessary resources on EKS, follow this order:
+
+- **Cluster and StorageClass**
+  - `cluster.yaml` in `clusterEksctl` (if the cluster is not already created).
+  - `local-storageclass.yaml` in `configs/storageclass` (to set up the StorageClass before creating volumes).
+
+- **Database**
+  - ConfigMap: `gndatabase-configmap.yaml` in `database/configmaps`.
+  - PVC: `dbdata-pvc.yaml` in `database/volumes`.
+  - Deployment: `gndatabase-deployment.yaml` in `database/deployments`.
+  - Service: `gndatabase-service.yaml` in `database/services`.
+
+- **gn-cloud Components**
+  - ConfigMaps in `gn-cloud/configmaps` (to make all configurations available).
+  - PVCs: `statics-pvc.yaml` and `tmp-pvc.yaml` in `gn-cloud/volumes`.
+  - Deployments: Deploy `celery`, `django`, `mapstore`, `memcache`, and `redis` in `gn-cloud/deployments`.
+  - Services for each component in `gn-cloud/services`.
+
+- **gs-cloud Components**
+  - ConfigMaps in `gs-cloud/configmaps` (to have all configurations ready).
+  - PVCs: `geowebcache-data-persistentvolumeclaim.yaml` and `rabbitmq-data-persistentvolumeclaim.yaml` in `gs-cloud/volumes`.
+  - Deployments: Deploy `acl`, `gateway`, `gwc`, `rabbitmq`, `rest`, `wcs`, `webui`, `wfs`, and `wms` in `gs-cloud/deployments`.
+  - Services in `gs-cloud/services`.
+
+- **Ingress**
+  - Finally, apply `geonode-ingress.yaml` in `configs/ingress` to expose services to the outside.
+
+After following these steps, verify the status of your pods and services.
