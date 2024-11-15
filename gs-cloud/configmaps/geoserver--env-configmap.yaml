@@ -32,9 +32,9 @@ data:
   GEONODE_CLIENT_NAME: geonode
   GEONODE_CLIENT_ID: Jrchz2oPY3akmzndmgUTYrs9gczlgoV20YPSvqaV
   GEONODE_CLIENT_SECRET: rCnp5txobUo83EpQEblM8fVj3QT5zb5qRfxNsuPzCqZaiRyIoxM4jdgMiZKFfePBHYXCLd7B8NlkfDBY9HKeIQPcy5Cp08KQNpRHQbjpLItDHv12GvkSeXp6OxaUETv3
-  GEONODE_CLIENT_REDIRECT_URI: http://eks.kan.com.ar/geoserver/index.html
+  GEONODE_CLIENT_REDIRECT_URI: https://KUBERNETES-SITE-URL/geoserver/index.html
   GEONODE_CLIENT_SCOPE: write
-  GEONODE_CLIENT_LOGOUT_URI: http://eks.kan.com.ar/account/logout/
+  GEONODE_CLIENT_LOGOUT_URI: https://KUBERNETES-SITE-URL/account/logout/
 
   # WEBUI
   URL_AFTER_LOGOUT: "/logout"

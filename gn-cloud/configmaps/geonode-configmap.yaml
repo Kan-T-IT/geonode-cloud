@@ -41,7 +41,7 @@ data:
   CELERY_BEAT_SCHEDULER: celery.beat:PersistentScheduler
   ASYNC_SIGNALS: "True"
   
-  SITEURL: http://eks.kan.com.ar/
+  SITEURL: https://KUBERNETES-SITE-URL/
   
   ALLOWED_HOSTS: '[''django'', ''*'']'
   
@@ -82,8 +82,8 @@ data:
   # #################
   # geoserver
   # #################
-  GEOSERVER_WEB_UI_LOCATION: http://eks.kan.com.ar/geoserver/
-  GEOSERVER_PUBLIC_LOCATION: http://eks.kan.com.ar/geoserver/
+  GEOSERVER_WEB_UI_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
+  GEOSERVER_PUBLIC_LOCATION: https://KUBERNETES-SITE-URL/geoserver/
   GEOSERVER_LOCATION: http://gateway:8080/geoserver/
   GEOSERVER_ADMIN_USER: admin
   GEOSERVER_ADMIN_PASSWORD: geoserver
@@ -98,7 +98,7 @@ data:
   # catalogue
   # #################
   CATALOGUE_ENGINE: geonode.catalogue.backends.pycsw_local
-  CATALOGUE_URL: http://eks.kan.com.ar/catalogue/csw
+  CATALOGUE_URL: https://KUBERNETES-SITE-URL/catalogue/csw
 
   # #################
   # redis_cache
@@ -243,7 +243,7 @@ data:
   EXTRA_CONTRIB_URLS: '[["",""]]'
 
   #ACL Client
-  ACL_HOST: http://eks.kan.com.ar/acl/api
+  ACL_HOST: https://KUBERNETES-SITE-URL/acl/api
   ACL_USERNAME: admin
   ACL_PASSWORD: s3cr3t
 

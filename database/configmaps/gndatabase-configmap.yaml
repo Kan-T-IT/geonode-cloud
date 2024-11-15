@@ -19,7 +19,7 @@ data:
   CELERY_BEAT_SCHEDULER: celery.beat:PersistentScheduler
   ASYNC_SIGNALS: "True"
 
-  SITEURL: http://eks.kan.com.ar/
+  SITEURL: https://KUBERNETES-SITE-URL/
 
   # PostgreSQL
   POSTGRESQL_MAX_CONNECTIONS: "200"
