@@ -61,6 +61,8 @@ spec:
         - name: geoserver
           mountPath: "/etc/geoserver/geoserver.yml"
           subPath: "geoserver.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
@@ -73,4 +75,7 @@ spec:
       - name: geoserver
         configMap:
           name: geoserver-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}

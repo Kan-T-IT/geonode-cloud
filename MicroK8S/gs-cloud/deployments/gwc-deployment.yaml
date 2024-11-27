@@ -56,13 +56,15 @@ spec:
             memory: "2Gi"
         volumeMounts:
         - name: geowebcache-data
-          mountPath: /data/geowebcache
+          mountPath: /opt/app/data_directory/gwc
         - name: jndi
           mountPath: "/etc/geoserver/jndi.yml"
           subPath: "jndi.yaml"
         - name: geoserver
           mountPath: "/etc/geoserver/geoserver.yml"
           subPath: "geoserver.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -78,4 +80,7 @@ spec:
       - name: jndi
         configMap:
           name: jndi-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}

@@ -55,6 +55,8 @@ spec:
         - name: geoserver
           mountPath: "/etc/geoserver/geoserver.yml"
           subPath: "geoserver.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -70,4 +72,7 @@ spec:
       - name: geoserver
         configMap:
           name: geoserver-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}

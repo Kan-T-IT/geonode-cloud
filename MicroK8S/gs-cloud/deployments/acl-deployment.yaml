@@ -95,6 +95,8 @@ spec:
         - name: jndi
           mountPath: "/opt/app/bin/jndi.yml"
           subPath: "jndi.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
@@ -104,4 +106,7 @@ spec:
       - name: jndi
         configMap:
           name: jndi-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}
