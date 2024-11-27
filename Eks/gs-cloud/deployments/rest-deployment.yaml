@@ -41,16 +41,16 @@ spec:
             configMapKeyRef:
               key: SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-rest:1.8.10
+        image: geoservercloud/geoserver-cloud-rest:1.9-RC3
         imagePullPolicy: "IfNotPresent"
         name: rest
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Reducido para entorno de prueba
+            cpu: "150m"
           limits:
-            cpu: "1500m"
-            memory: "2Gi"
+            cpu: "1000m"
+            memory: "1Gi"
         securityContext:
           runAsUser: 0
           runAsGroup: 0

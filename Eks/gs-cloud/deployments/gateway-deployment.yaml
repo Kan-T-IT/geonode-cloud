@@ -25,7 +25,7 @@ spec:
             configMapKeyRef:
               key: GATEWAY_SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-gateway:1.8.10
+        image: geoservercloud/geoserver-cloud-gateway:1.9-RC3
         imagePullPolicy: "IfNotPresent"
         name: gateway
         ports:
@@ -33,11 +33,11 @@ spec:
         - containerPort: 8081
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Ajustado para entorno de prueba
+            cpu: "100m"
           limits:
-            cpu: "400m"
-            memory: "2Gi"
+            cpu: "300m"      # Reducción para ajustarse a los límites del clúster de prueba
+            memory: "1Gi"
         securityContext:
           runAsUser: 0
           runAsGroup: 0

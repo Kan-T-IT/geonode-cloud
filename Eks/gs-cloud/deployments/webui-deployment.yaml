@@ -1,26 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wcs
+  name: webui
   labels:
     app: geoserver
-    component: wcs
-    ogc: service
+    component: webui
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: geoserver
-      component: wcs
-      ogc: service
+      component: webui
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
         app: geoserver
-        component: wcs
-        ogc: service
+        component: webui
     spec:
       containers:
       - env:
@@ -39,29 +36,34 @@ spec:
             configMapKeyRef:
               key: SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-wcs:1.8.10
+        image: geoservercloud/geoserver-cloud-webui:1.9-RC3
         imagePullPolicy: "IfNotPresent"
-        name: wcs
+        name: webui
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "200Mi"   # Aún más reducido para pruebas
+            cpu: "50m"
           limits:
-            cpu: "1500m"
-            memory: "4Gi"
-        securityContext:
-          runAsUser: 0
-          runAsGroup: 0
+            cpu: "200m"       # Máximo de 0.2 vCPU
+            memory: "512Mi"   # Límite de memoria en 512Mi
         volumeMounts:
-        - name: geoserver
-          mountPath: "/etc/geoserver/geoserver.yml"
-          subPath: "geoserver.yaml"
+        - name: geowebcache-data
+          mountPath: /data/geowebcache
         - name: jndi
           mountPath: "/etc/geoserver/jndi.yml"
           subPath: "jndi.yaml"
+        - name: geoserver
+          mountPath: "/etc/geoserver/geoserver.yml"
+          subPath: "geoserver.yaml"
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
+      - name: geowebcache-data
+        persistentVolumeClaim:
+          claimName: geowebcache-data
       - name: jndi
         configMap:
           name: jndi-configmap
@@ -69,4 +71,3 @@ spec:
         configMap:
           name: geoserver-configmap
 status: {}
-

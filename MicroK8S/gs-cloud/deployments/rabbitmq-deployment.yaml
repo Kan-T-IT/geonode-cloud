@@ -38,6 +38,8 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
+        - mountPath: /mnt/volumes/statics
+          name: statics
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -47,4 +49,7 @@ spec:
       - name: rabbitmq-data
         persistentVolumeClaim:
           claimName: rabbitmq-data
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}

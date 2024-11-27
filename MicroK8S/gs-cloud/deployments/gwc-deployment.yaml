@@ -1,26 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webui
+  name: gwc
   labels:
     app: geoserver
-    component: webui
+    component: gwc
+    ogc: service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: geoserver
-      component: webui
+      component: gwc
+      ogc: service
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
         app: geoserver
-        component: webui
+        component: gwc
+        ogc: service
     spec:
       containers:
       - env:
+        - name: JAVA_OPTS
+          valueFrom:
+            configMapKeyRef:
+              key: JAVA_OPTS
+              name: geoserver--env
         - name: RABBITMQ_PORT_5672_TCP
           valueFrom:
             configMapKeyRef:
@@ -36,25 +44,27 @@ spec:
             configMapKeyRef:
               key: SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-webui:1.8.10
+        image: geoservercloud/geoserver-cloud-gwc:1.8.10
         imagePullPolicy: "IfNotPresent"
-        name: webui
+        name: gwc
         resources:
           requests:
             memory: "1Gi"
             cpu: "200m"
           limits:
-            cpu: "4000m"
-            memory: "6Gi"
+            cpu: "3000m"
+            memory: "2Gi"
         volumeMounts:
         - name: geowebcache-data
-          mountPath: /data/geowebcache
+          mountPath: /opt/app/data_directory/gwc
         - name: jndi
           mountPath: "/etc/geoserver/jndi.yml"
           subPath: "jndi.yaml"
         - name: geoserver
           mountPath: "/etc/geoserver/geoserver.yml"
           subPath: "geoserver.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -64,10 +74,13 @@ spec:
       - name: geowebcache-data
         persistentVolumeClaim:
           claimName: geowebcache-data
-      - name: jndi
-        configMap:
-          name: jndi-configmap
       - name: geoserver
         configMap:
           name: geoserver-configmap
+      - name: jndi
+        configMap:
+          name: jndi-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
 status: {}

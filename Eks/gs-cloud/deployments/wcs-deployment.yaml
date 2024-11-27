@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wms
+  name: wcs
   labels:
     app: geoserver
-    component: wms
+    component: wcs
     ogc: service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: geoserver
-      component: wms
+      component: wcs
       ogc: service
   strategy:
     type: RollingUpdate
@@ -19,7 +19,7 @@ spec:
     metadata:
       labels:
         app: geoserver
-        component: wms
+        component: wcs
         ogc: service
     spec:
       containers:
@@ -39,34 +39,29 @@ spec:
             configMapKeyRef:
               key: SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-wms:1.8.10
+        image: geoservercloud/geoserver-cloud-wcs:1.9-RC3
         imagePullPolicy: "IfNotPresent"
-        name: wms
+        name: wcs
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
+            memory: "500Mi"  # Reducido
+            cpu: "150m"
           limits:
-            cpu: "4000m"
-            memory: "4Gi"
+            cpu: "1000m"    # Reducido
+            memory: "1Gi"
         securityContext:
           runAsUser: 0
           runAsGroup: 0
         volumeMounts:
-        - name: geowebcache-data
-          mountPath: /data/geowebcache
-        - name: jndi
-          mountPath: "/etc/geoserver/jndi.yml"
-          subPath: "jndi.yaml"
         - name: geoserver
           mountPath: "/etc/geoserver/geoserver.yml"
           subPath: "geoserver.yaml"
+        - name: jndi
+          mountPath: "/etc/geoserver/jndi.yml"
+          subPath: "jndi.yaml"
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: geowebcache-data
-        persistentVolumeClaim:
-          claimName: geowebcache-data
       - name: jndi
         configMap:
           name: jndi-configmap
