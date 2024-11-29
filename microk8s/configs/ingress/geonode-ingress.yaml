@@ -5,11 +5,11 @@ metadata:
   namespace: KUBERNETES-NAMESPACE
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/client-max-body-size: "100M"
+    nginx.ingress.kubernetes.io/client-max-body-size: "500M"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600s"
-    nginx.ingress.kubernetes.io/proxy-body-size: "100M"
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
-    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500M"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600s"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600s"
 
@@ -21,22 +21,25 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-credentials: "false"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Accept, Authorization, Origin, User-Agent"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "Content-Range, Content-Length, Accept-Ranges"
 
-    cert-manager.io/cluster-issuer: "CLUSTER-ISSUER-NAME"
+    cert-manager.io/cluster-issuer: "letsencrypt"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+
+
 
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - KUBERNETES-SITE-URL
-    secretName: CLUSTER-ISSUER-NAME
+    - 0.0.0.0
+    secretName: letsencrypt
   rules:
-  - host: KUBERNETES-SITE-URL
-#  - host: "localhost"
+  - host: kube-qa.kan.com.ar
     http:
       paths:
-      - path: /
+      - path: /static/mapstore
         pathType: Prefix
         backend:
           service:
@@ -44,21 +47,45 @@ spec:
             port:
               number: 8081
 
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /static/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /static/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|tif|tiff|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
       - path: /uploaded/
         pathType: ImplementationSpecific
         backend:
           service:
-            name: mapstore
+            name: django
             port:
-              number: 8081
+              number: 8000
 
-      - path: /uploaded/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
+      - path: /uploaded/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|tif|tiff|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
         pathType: ImplementationSpecific
         backend:
           service:
-            name: mapstore
+            name: django
             port:
-              number: 8081
+              number: 8000
 
       - path: /celery/
         pathType: ImplementationSpecific
