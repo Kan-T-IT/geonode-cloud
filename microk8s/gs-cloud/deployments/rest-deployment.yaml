@@ -42,7 +42,7 @@ spec:
             configMapKeyRef:
               key: SPRING_PROFILES_ACTIVE
               name: geoserver--env
-        image: geoservercloud/geoserver-cloud-rest:1.8.10
+        image: geoservercloud/geoserver-cloud-rest:1.9-SNAPSHOT
         imagePullPolicy: "IfNotPresent"
         name: rest
         resources:

@@ -77,7 +77,7 @@ spec:
             configMapKeyRef:
               key: RABBITMQ_PASSWORD
               name: geoserver--env
-        image: geoservercloud/geoserver-acl:2.1.2
+        image: geoservercloud/geoserver-acl:2.3.1
         imagePullPolicy: "IfNotPresent"
         name: acl
         ports:
