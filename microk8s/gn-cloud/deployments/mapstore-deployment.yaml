@@ -20,8 +20,6 @@ spec:
         app: geonode
         component: mapstore
     spec:
-      imagePullSecrets:
-      - name: registrykey
       containers:
         - image: kantit/geonode-cloud-mapstore-client:1.0.0-rc1
           imagePullPolicy: IfNotPresent

@@ -20,8 +20,6 @@ spec:
         app: geonode
         component: celery
     spec:
-      imagePullSecrets:
-      - name: registrykey
       containers:
         - args:
             - celery-cmd
