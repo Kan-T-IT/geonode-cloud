@@ -201,5 +201,5 @@ data:
 kind: ConfigMap
 metadata:
   name: gateway-configmap
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE
 

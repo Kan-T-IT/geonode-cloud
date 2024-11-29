@@ -5,6 +5,7 @@ metadata:
     app: gwc
     type: data
   name: geowebcache-data
+  namespace: KUBERNETES-NAMESPACE
 spec:
   accessModes:
   - ReadWriteOnce

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gwc
+  namespace: KUBERNETES-NAMESPACE
   labels:
     component: gwc
 spec:

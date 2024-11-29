@@ -63,4 +63,4 @@ data:
 kind: ConfigMap
 metadata:
   name: mapstore-conf
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE

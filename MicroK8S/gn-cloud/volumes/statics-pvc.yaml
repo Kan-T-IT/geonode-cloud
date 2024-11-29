@@ -5,6 +5,7 @@ metadata:
     app: geonode
     type: statics
   name: statics
+  namespace: KUBERNETES-NAMESPACE
 spec:
   accessModes:
   - ReadWriteOnce

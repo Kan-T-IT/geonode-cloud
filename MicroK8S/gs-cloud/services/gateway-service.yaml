@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gateway
+  namespace: KUBERNETES-NAMESPACE
   labels:
     component: gateway
 spec:

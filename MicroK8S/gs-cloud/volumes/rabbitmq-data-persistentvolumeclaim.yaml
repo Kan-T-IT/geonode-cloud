@@ -5,6 +5,7 @@ metadata:
     app: rabbitmq
     type: data
   name: rabbitmq-data
+  namespace: KUBERNETES-NAMESPACE
 spec:
   accessModes:
   - ReadWriteOnce

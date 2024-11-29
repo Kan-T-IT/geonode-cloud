@@ -75,4 +75,4 @@ data:
 kind: ConfigMap
 metadata:
   name: geoserver-spring
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE

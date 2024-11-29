@@ -58,4 +58,4 @@ data:
 kind: ConfigMap
 metadata:
   name: acl-values-configmap
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE

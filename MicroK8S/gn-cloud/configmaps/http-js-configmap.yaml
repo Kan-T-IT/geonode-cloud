@@ -11,4 +11,4 @@ data:
 kind: ConfigMap
 metadata:
   name: http-js
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE

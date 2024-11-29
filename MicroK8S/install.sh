@@ -7,6 +7,7 @@ grep -rl KUBERNETES-SITE-URL --exclude install.sh . | xargs sed -i 's|KUBERNETES
 grep -rl KUBERNETES-NODE-NAME --exclude install.sh . | xargs sed -i 's|KUBERNETES-NODE-NAME|'"$KUBERNETES_NODE_NAME"'|g'
 grep -rl KUBERNETES-VOL-DIR --exclude install.sh . | xargs sed -i 's|KUBERNETES-VOL-DIR|'"$KUBERNETES_VOL_DIR"'|g'
 grep -rl CLUSTER-ISSUER-NAME --exclude install.sh . | xargs sed -i 's|CLUSTER-ISSUER-NAME|'"$CLUSTER_ISSUER_NAME"'|g'
+grep -rl KUBERNETES-NAMESPACE --exclude install.sh . | xargs sed -i 's|KUBERNETES-NAMESPACE|'"$KUBERNETES_NAMESPACE"'|g'
 
 sed -i 's|SERVER-PUBLIC-IP|'"$SERVER_PUBLIC_IP"'|g' ./configs/loadbalancer/metallb-configmap.yaml 
 sed -i 's|GEOSERVER_ADMIN_PASSWORD: geoserver|GEOSERVER_ADMIN_PASSWORD: '"$GEOSERVER_PASSWORD"'|g' ./gn-cloud/configmaps/geonode-configmap.yaml

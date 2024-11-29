@@ -60,3 +60,4 @@ data:
 kind: ConfigMap
 metadata:
   name: geoserver--env
+  namespace: KUBERNETES-NAMESPACE

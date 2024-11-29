@@ -27,3 +27,4 @@ data:
 kind: ConfigMap
 metadata:
   name: gndatabase--env
+  namespace: KUBERNETES-NAMESPACE
