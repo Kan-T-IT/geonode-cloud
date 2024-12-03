@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: acl
+  labels:
+    component: acl
+spec:
+  selector:
+    component: acl
+  ports:
+  - name: "http"
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP  # Para acceso interno en el clúster

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: gndatabase
+  labels:
+    app: geonode
+    component: gndatabase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geonode
+      component: gndatabase
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geonode
+        component: gndatabase
+    spec:
+      containers:
+        - args:
+            - postgres
+            - -c
+            - max_connections=1000
+          envFrom:
+            - configMapRef:
+                name: gndatabase--env
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata  # Configura un subdirectorio para evitar conflictos
+          image: postgis/postgis:15-master
+          livenessProbe:
+            exec:
+              command:
+              - pg_isready
+              - -d
+              - postgres
+              - -U
+              - postgres
+          name: db4geonode
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data  # Monta el PVC aquí
+              name: dbdata
+      volumes:
+        - name: dbdata
+          persistentVolumeClaim:
+            claimName: dbdata-pvc

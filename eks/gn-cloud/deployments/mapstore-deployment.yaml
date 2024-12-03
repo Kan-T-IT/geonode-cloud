@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: mapstore
+  labels:
+    app: geonode
+    component: mapstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geonode
+      component: mapstore
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geonode
+        component: mapstore
+    spec:
+      imagePullSecrets:
+        - name: registrykey
+      containers:
+        - name: mapstore4geonode
+          workingDir: /geonode-mapstore-client/geonode_mapstore_client/client
+          image: kantit/geonode-cloud-mapstore-client:1.0.0-rc1
+          imagePullPolicy: IfNotPresent
+          command: ["node", "--max-old-space-size=2048", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/.bin/webpack", "serve", "--progress", "--color", "--port", "8081", "--hot", "--inline", "--config", "/geonode-mapstore-client/geonode_mapstore_client/client/node_modules/@mapstore/project/types/standard/config/webpack.config.js"]
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+status: {}

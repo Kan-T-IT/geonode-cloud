@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geowebcache-data-gwc
+  namespace: KUBERNETES-NAMESPACE
+  labels:
+    app: gwc
+    type: data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Ajusta el tamaño según tus necesidades
+  storageClassName: gp3  # Asegúrate de que coincida con tu StorageClass

@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: acl
+  labels:
+    app: geoserver
+    component: acl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoserver
+      component: acl
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geoserver
+        component: acl
+    spec:
+      containers:
+      - env:
+        - name: PG_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: PG_HOST
+              name: geoserver--env
+        - name: PG_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: PG_PORT
+              name: geoserver--env
+        - name: PG_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_DB
+              name: geoserver--env
+        - name: PG_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER
+              name: geoserver--env
+        - name: PG_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PASSWORD
+              name: geoserver--env
+        - name: PG_SCHEMA
+          valueFrom:
+            configMapKeyRef:
+              key: PG_SCHEMA
+              name: geoserver--env
+        - name: GEOSERVER_BUS_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: GEOSERVER_BUS_ENABLED
+              name: geoserver--env
+        - name: RABBITMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_RABBITMQ_HOST
+              name: geoserver--env
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_PORT
+              name: geoserver--env
+        - name: RABBITMQ_USER
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_USER
+              name: geoserver--env
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_PASSWORD
+              name: geoserver--env
+        image: geoservercloud/geoserver-acl:2.1.2
+        imagePullPolicy: "IfNotPresent"
+        name: acl
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: "500Mi"  # Reducido para entorno de prueba
+            cpu: "100m"
+          limits:
+            cpu: "500m"      # Ajustado para instancias t3.medium
+            memory: "1Gi"
+        volumeMounts:
+        - name: acl
+          mountPath: "/opt/app/bin/acl.yml"
+          subPath: "acl.yaml"
+        - name: jndi
+          mountPath: "/opt/app/bin/jndi.yml"
+          subPath: "jndi.yaml"
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: acl
+        configMap:
+          name: acl-configmap
+      - name: jndi
+        configMap:
+          name: jndi-configmap
+status: {}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: acldb
+  namespace: KUBERNETES-NAMESPACE
+  labels:
+    component: acldb
+spec:
+  selector:
+    component: acldb
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+status:
+  loadBalancer: {}

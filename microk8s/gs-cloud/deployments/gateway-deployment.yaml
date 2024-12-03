@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: KUBERNETES-NAMESPACE
+  labels:
+    app: geoserver
+    component: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoserver
+      component: gateway
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: geoserver
+        component: gateway
+    spec:
+      containers:
+      - env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              key: GATEWAY_SPRING_PROFILES_ACTIVE
+              name: geoserver--env
+        image: geoservercloud/geoserver-cloud-gateway:1.9-SNAPSHOT
+        imagePullPolicy: "IfNotPresent"
+        name: gateway
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "200m"
+          limits:
+            cpu: "400m"
+            memory: "2Gi"
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        volumeMounts:
+        - name: gateway
+          mountPath: "/etc/geoserver/gateway-service.yml"
+          subPath: "gateway-service.yml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: gateway
+        configMap:
+          name: gateway-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics 
+status: {}
