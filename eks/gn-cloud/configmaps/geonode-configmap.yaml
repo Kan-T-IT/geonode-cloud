@@ -250,3 +250,4 @@ data:
 kind: ConfigMap
 metadata:
   name: geonode--env
+  namespace: KUBERNETES-NAMESPACE

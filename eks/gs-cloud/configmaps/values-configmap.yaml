@@ -19,4 +19,4 @@ kind: ConfigMap
 metadata:
 
   name: values-configmap
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE

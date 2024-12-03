@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: statics-django
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE
   labels:
     app: geonode
     type: statics-django

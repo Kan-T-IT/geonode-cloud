@@ -57,5 +57,5 @@ data:
 kind: ConfigMap
 metadata:
   name: jndi-configmap
-  namespace: default
+  namespace: KUBERNETES-NAMESPACE
 

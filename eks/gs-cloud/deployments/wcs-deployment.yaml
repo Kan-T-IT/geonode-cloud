@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: KUBERNETES-NAMESPACE
   name: wcs
   labels:
     app: geoserver
