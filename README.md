@@ -1,4 +1,3 @@
-![Kan Territory & IT](https://kan.com.ar/wp-content/uploads/2024/01/logoSM.png)
 
 ![GeoNode](https://geonode.org/static/img/geonode_logo.png)
 
@@ -44,31 +43,39 @@ Specifically **Geonode Cloud Core** contains the following main technological co
 The architecture is based on the use of microservices, where it is planned to incorporate new microservices that today are in the monolithic component of Django. 
 
 
+## License
+GeoNode Cloud licensed under the [GPLv3.0](LICENSE).
+
 ## Distribution and deployment
 
 Docker images for all the services are available on DockerHub, under the [KAN Territory & IT organization](https://hub.docker.com/u/kantit).
 
-You can find  production-suitable deployment files for docker-compose and podman under the [docs/deploy](docs/deploy) folder.
+You can find production-suitable deployment files in the folders:
+* [microk8s](microk8s): for deployment on Micro K8S
+* [eks](eks): for deployment on AWS
 
 
 ## Contributing
 
-Please read [the contribution guidelines](CONTRIBUTING.md) before contributing pull requests to the Geonode Cloud project.
+Please read [the contribution guidelines](CONTRIBUTING.md) before contributing pull requests to the GeoNode Cloud project.
 
-Follow the [developer's guide]() to know more about the project's technical details.
 
 ## Status
 
-Read the [changelog](https://github.com/Kan-T-IT/geonode-cloud/releases) for more information.
+`v1.0.0` released on top of GeoNode `4.2.4`.
+
+Read the [Release Notes](https://github.com/Kan-T-IT/geonode-cloud/releases) for more information.
 
 
 ## Bugs
 
 *GeoNode Cloud*'s issue tracking is at this [Issues GitHub](https://github.com/Kan-T-IT/geonode-cloud/issues) repository.
 
+The upstream *GeoServer* project uses [Issues GitHub](https://github.com/GeoNode/geonode/issues) for issue tracking.
+
 ## Roadmap
 
-TDB
+Here you can see the proposed [Roadmap](https://github.com/Kan-T-IT/geonode-cloud/wiki/Roadmap-GeoNode-Cloud)
 
 # Deployment
 
@@ -76,7 +83,7 @@ For the deployment of Geonode Cloud we can deploy it on different Kubernete plat
 
 ## Deployment on MicroK8S
 
-## Requisites
+### Pre Requisites
 
 * MicroK8S.
     * Ingress module.
@@ -84,19 +91,19 @@ For the deployment of Geonode Cloud we can deploy it on different Kubernete plat
     * Cert-manager module.
 
 
-### Use snap to install microk8s
+1. Use snap to install microk8s
 ```bash
 sudo snap install microk8s --classic
 ```
 
-### Enable necesary micro8s modules
+2. Enable necesary micro8s modules
 
 ```bash
 microk8s enable ingress
 microk8s enable cert-manager
 ```
 
-### Create certmanager config to enable letsencrypt using your own email
+3. Create certmanager config to enable letsencrypt using your own email
 ```bash
 microk8s kubectl apply -f - <<EOF
 ---
@@ -119,15 +126,19 @@ spec:
 EOF
 ```
 
-## Deployment
-
-### Clone this repository
+4. Clone this repository
 
 ```bash
 git clone https://github.com/Kan-T-IT/geonode-cloud.git && cd geonode-cloud
 ```
 
-### Edit all fields in .env file with the necesary information.
+5. Access to directory for microk8s
+
+```bash
+cd microk8s
+```
+
+6. Edit all fields in .env file with the necesary information.
 ```env
 KUBERNETES_SITE_URL=GEONODE_CLOUD_FINAL_URL    # i.e.: cloud.mygeonode.com
 KUBERNETES_NODE_NAME=YOUR_CLUSTER_NAME_NAME    # usually host machine name
@@ -137,13 +148,16 @@ SERVER_PUBLIC_IP=YOU.RPU.BLI.CIP               # the public ipv4 of the server
 GEONODE_PASSWORD=admin                         # password for geonode admin user 
 GEOSERVER_PASSWORD=geoserver                   # password for geoserver admin user
 ```
-### Run `./install.sh` and enjoy.
+
+7. Run `./install.sh` and enjoy.
+
 
 ---
 
 ## Deployment on EKS
 
-### Prerequisites
+### Pre requisites
+
 
 Ensure that the EKS cluster is up and running and configured with the following:
 
@@ -151,7 +165,9 @@ Ensure that the EKS cluster is up and running and configured with the following:
 2. **IAM Service Account for AWS Load Balancer Controller**: Create the IAM service account and attach the necessary policies.
 3. **Necessary Addons**: Install AWS Load Balancer Controller and EBS CSI Driver.
 
-### Despliegue de Recursos Kubernetes
+
+### Deploy of Kubernetes Resources
+
 
 To deploy the necessary resources on EKS, follow this order:
 
@@ -180,4 +196,6 @@ To deploy the necessary resources on EKS, follow this order:
 - **Ingress**
   - Finally, apply `geonode-ingress.yaml` in `configs/ingress` to expose services to the outside.
 
+
 After following these steps, verify the status of your pods and services.
+
