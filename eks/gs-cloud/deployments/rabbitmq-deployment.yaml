@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: rabbitmq
+  labels:
+    app: geoserver
+    component: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoserver
+      component: rabbitmq
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geoserver
+        component: rabbitmq
+    spec:
+      containers:
+      - image: rabbitmq:3.11-management
+        imagePullPolicy: "IfNotPresent"
+        name: rabbitmq
+        ports:
+        - containerPort: 4369
+        - containerPort: 5672
+        - containerPort: 15672
+        - containerPort: 15692
+        resources:
+          requests:
+            memory: "500Mi"  # Ajuste de memoria para reducir el consumo
+            cpu: "100m"       # Ajuste de CPU mínimo para entornos de prueba
+          limits:
+            cpu: "500m"       # Reducido para mejorar la asignación en instancias limitadas
+            memory: "1Gi"     # Memoria límite ajustada para evitar posibles problemas de consumo
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+      restartPolicy: Always
+      volumes:
+      - name: rabbitmq-data
+        persistentVolumeClaim:
+          claimName: rabbitmq-data

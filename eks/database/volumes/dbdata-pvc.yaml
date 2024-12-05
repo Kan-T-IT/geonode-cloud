@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: dbdata-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Cambiado a 8Gi para mejor almacenamiento en producción
+  storageClassName: gp3  # StorageClass estándar de AWS para EBS

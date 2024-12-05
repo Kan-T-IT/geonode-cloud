@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: gndatabase
+  labels:
+    app: geonode
+    component: gndatabase
+spec:
+  selector:
+    app: geonode
+    component: gndatabase
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432  # Especifica el puerto en el contenedor al que se debe redirigir
+  type: ClusterIP  # Servicio interno accesible dentro del clúster

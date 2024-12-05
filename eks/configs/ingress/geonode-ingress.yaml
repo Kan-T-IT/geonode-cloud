@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: geonode-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/ip-address-type: ipv4 # <-- Añadir esto aquí dualstack
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /geoserver
+        pathType: Prefix
+        backend:
+          service:
+            name: gateway
+            port:
+              number: 8080
+      - path: /static/mapstore
+        pathType: Prefix
+        backend:
+          service:
+            name: mapstore
+            port:
+              number: 8081
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000

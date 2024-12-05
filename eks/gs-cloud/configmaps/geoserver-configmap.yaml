@@ -1,0 +1,331 @@
+apiVersion: v1
+data:
+  geoserver.yaml: |-
+    # This configuration file is imported by all geoserver-specific services' bootstrap.yml
+    # For the sake of clarity, configuration properties relative to the spring-boot application
+    # itself is imported from geoserver_spring.yml, and properties specific to geoserver from this file.
+    spring.config.import:
+    - geoserver_spring.yml
+    - optional:geoserver_logging.yml
+    - jndi.yml
+
+    spring:
+      # cache implementation to use if `geoserver.backend.caching.enabled: true`
+      cache:
+        type: caffeine
+        caffeine:
+          #CaffeineSpec supports parsing configuration off of a string
+          #The string syntax is a series of comma-separated keys or key-value pairs, each corresponding to a Caffeine builder method.
+          #
+          #initialCapacity=[integer]
+          #maximumSize=[long]
+          #maximumWeight=[long]
+          #expireAfterAccess=[duration]
+          #expireAfterWrite=[duration]
+          #refreshAfterWrite=[duration]
+          #softValues: sets Caffeine.softValues.
+          #recordStats: sets Caffeine.recordStats.
+          spec: softValues,initialCapacity=10000,maximumSize=10000,recordStats
+
+    # The following geoserver, geotools, and geowebcache configuration properties
+    # are common to all geoserver microservices, despite some may not apply to a given service,
+    # it's easier to have them all here in the default spring profile.
+    # Common configuration for all services. Override or add service specific config
+    # properties on each <service-name>-service.yml file
+
+    # GeoServer-Cloud common config properties
+    geoserver:
+      debug:
+        # add an X-gs-cloud-service-id:<service-id> response header to each response
+        # to track which cluster node replied
+        instanceId: false
+      # Access Control List client config. Usually enabled through the acl spring profile.
+      acl:
+        enabled: ${acl.enabled:false}
+        client:
+          basePath: ${acl.url:http://acl:8080/acl/api}
+          username: ${acl.username:}
+          password: ${acl.password:}
+          debug: ${acl.debug:false}
+          caching: ${acl.caching:true}
+          # timeout in seconds for startup to fail if API is not available
+          initTimeout: ${acl.initTimeout:10}
+      metrics:
+        enabled: true
+        instance-id: ${info.instance-id}
+      security:
+        enabled: true
+        authkey: true
+        gateway-shared-auth:
+          enabled: true
+          auto: true
+          server: false
+      servlet.filter.session-debug.enabled: false # until the NPE is fixed
+      catalog:
+        advertised: true
+        localWorkspace: true
+        isolated: true
+        secure: true
+        # enable if needed on a backend-specific profile (e.g. jdbcconfig)
+        caching.enabled: false
+      bus:
+        enabled: true
+        # whether to send distributed events (i.e. acts as master). All instances receive remote events.
+        send-events: true
+        # whether to send the object (CatalogInfo/config info) as payload with the event. Set to false,
+        # not all possible payload types are properly tested, and full object payload is not needed.
+        send-object: ${geoserver.backend.data-directory.enabled}
+        # whether to send a diff of changes as payload with the event. Set to false, not all possible payload types are properly tested nor needed.
+        send-diff: ${geoserver.backend.data-directory.enabled}
+      backend:
+        # configure catalog backends and decide which backend to use on this service.
+        # All backends are disabled, enable the required one on each service.
+        data-directory:
+          enabled: ${backend.data-directory:false}
+          location: ${GEOSERVER_DATA_DIR:/opt/app/data_directory}
+          # use optimized parallel datadirectory loader. Defaults to true
+          parallel-loader: true
+        jdbcconfig:
+          enabled: ${backend.jdbcconfig:false}
+          initdb: true
+          web.enabled: true
+          cache-directory: ${jdbcconfig.cachedir:${java.io.tmpdir}/cngs/jdbcconfig/cache}
+          datasource:
+            url: "${jdbcconfig.url:jdbc:postgresql://${jdbcconfig.host:database}:${jdbcconfig.port:5432}/${jdbcconfig.database:geoserver_config}?currentSchema=${jdbcconfig.schema:public}}"
+            username: ${jdbcconfig.username:geoserver}
+            password: ${jdbcconfig.password:geo5erver}
+            driverClassname: ${jdbcconfig.driverClassname:org.postgresql.Driver}
+            # optional:
+            minimumIdle: ${jdbcconfig.minConnections:0}
+            maximumPoolSize: ${jdbcconfig.maxConnections:8}
+            connectionTimeout: ${jdbcconfig.connectionTimeout:250}
+            idleTimeout: ${jdbcconfig.idleTimeout:10000}
+        pgconfig:
+          enabled: ${backend.pgconfig:false}
+          initialize: ${pgconfig.initialize:true}
+          schema: ${pgconfig.schema:public}
+          create-schema: true
+          datasource:
+            jndi-name: ${pgconfig.jndi-name:}
+            url: "${pgconfig.url:jdbc:postgresql://${pgconfig.host:database}:${pgconfig.port:5432}/${pgconfig.database:geoserver_config}}"
+            username: ${pgconfig.username:pgconfig}
+            password: ${pgconfig.password:pgconfig}
+            driverClassname: ${pgconfig.driverClassname:org.postgresql.Driver}
+            # optional:
+            minimumIdle: ${pgconfig.minConnections:0}
+            maximumPoolSize: ${pgconfig.maxConnections:10}
+            connectionTimeout: ${pgconfig.connectionTimeout:2500}
+            idleTimeout: ${pgconfig.idleTimeout:30000}
+      styling:
+        css.enabled: true
+        mapbox.enabled: true
+      wms:
+        reflector.enabled: true
+        kml.enabled: true
+        output-formats:
+          vector-tiles:
+            mapbox.enabled: true
+            geojson.enabled: true
+            topojson.enabled: true
+
+    # GeoTools HTTP Client proxy configuration, allows configuring cascaded WMS/WMTS/WFS stores
+    # that need to go through an HTTP proxy without affecting all the http clients at the JVM level
+    # These are default settings. The enabled property can be set to false to disable the custom
+    # HTTPClientFactory altogether.
+    # The following OS environment variables can be set for easier configuration:
+    # HTTP(S)_PROXYHOST, HTTP(S)_PROXYPORT, HTTP(S)_PROXYUSER, HTTP(S)_PROXYPASSWORD, HTTP(S)_NONPROXYHOSTS
+    geotools:
+      httpclient:
+        proxy:
+          enabled: true
+          http:
+            host: ${http.proxyHost:}
+            port: ${http.proxyPort:}
+            user: ${http.proxyUser:}
+            password: ${http.proxyPassword:}
+            nonProxyHosts: ${http.nonProxyHosts:localhost.*}
+            # comma separated list of Java regular expressions, e.g.: nonProxyHosts: localhost, example.*
+          https:
+            host: ${https.proxyHost:${geotools.httpclient.proxy.http.host}}
+            port: ${https.proxyPort:${geotools.httpclient.proxy.http.port}}
+            user: ${https.proxyUser:${geotools.httpclient.proxy.http.user}}
+            password: ${https.proxyPassword:${geotools.httpclient.proxy.http.password}}
+            nonProxyHosts: ${https.nonProxyHosts:${geotools.httpclient.proxy.http.nonProxyHosts}}
+
+    # GeoWebCache-specific configuration properties, apply to services that run some GWC
+    # internal components. For example, all of gwc-service, wms-service, and web-ui, will
+    # need to access GeoWebCache's blob stores, and tile-layer configuration resources.
+    # wms-service and web-ui won't event load components related to GWC REST/Web APIs, web UI,
+    # and others. Unlike web-ui, wms-service will load the internal components needed for
+    # on-demand tile seeding in order to serve WMC-C tiled requests if gwc.wms-integration=true,
+    # so that gwc/wms-c integration workds independently of gwc-service.
+    gwc:
+      enabled: true
+      cache-directory: ${GEOWEBCACHE_CACHE_DIR:${geoserver.backend.data-directory.location}/gwc}
+      rest-config: true
+      web-ui: true
+      wms-integration: true
+      services:
+        wmts: true
+        tms: true
+        wms: true
+        kml: true
+        gmaps: true
+        mgmaps: true
+      blobstores:
+        azure: true
+        s3: true
+
+    ---
+    #########################################################
+    #### Access Control List client applications profile ####
+    spring.config.activate.on-profile: acl
+
+    acl.enabled: true
+    acl.url: http://acl:8080/acl/api
+    acl.username: geoserver
+    acl.password: s3cr3t
+    acl.debug: false
+    acl.caching: true
+    acl.startupCheck: true
+    acl.initTimeout: 10
+
+    ###################################################
+    #### GeoServer configuration backend profiles: ####
+    ---
+    spring.config.activate.on-profile: datadir
+    backend.data-directory: true
+    ---
+    spring.config.activate.on-profile: jdbcconfig
+    backend.jdbcconfig: true
+
+    geoserver:
+      catalog:
+        # not sure why isolated workspaces don't work with jdbcconfig as backend
+        isolated: false
+        # disable caching if using the jdbcconfig as backend, as it does its own caching internally
+        caching.enabled: false
+
+    ---
+    spring.config.activate.on-profile: pgconfig
+    # enable the pgconfig catalog backend
+    backend.pgconfig: true
+    # configure the jndi jdbc datasource with the placeholders defined in jndi.yml
+    jndi.pgconfig.enabled: true
+    pgconfig.host: pgconfigdb
+    pgconfig.port: 5432
+    pgconfig.database: pgconfig
+    pgconfig.schema: pgconfig
+    pgconfig.username: pgconfig
+    pgconfig.password: pgconfig
+    pgconfig.maxConnections: 10
+    pgconfig.minConnections: 0
+    pgconfig.connectionTimeout: 2500
+    pgconfig.idleTimeout: 30000
+    pgconfig.initialize: true
+
+    # tell the pgconfig catalog backend which JNDI datasource to use
+    # e.g., jndi.datasources.pgconfig in jndi.yml defines java:comp/env/jdbc/pgconfig
+    pgconfig.jndi-name: java:comp/env/jdbc/pgconfig
+
+    # enable caching if using the pgconfig as backend
+    geoserver.catalog.caching.enabled: true
+
+    #############################################
+    #### per microservice-specific profiles: ####
+    ---
+    spring.config.activate.on-profile: wfs_service
+    geoserver.security.layergroup-containmentcache: false
+    ---
+    spring.config.activate.on-profile: wms_service
+    geoserver.security.layergroup-containmentcache: true
+    ---
+    spring.config.activate.on-profile: wcs_service
+    geoserver.security.layergroup-containmentcache: false
+    ---
+    spring.config.activate.on-profile: wps_service
+    geoserver.security.layergroup-containmentcache: false
+    ---
+    spring.config.activate.on-profile: restconfig_service
+    geoserver.security.layergroup-containmentcache: false
+    ---
+    spring.config.activate.on-profile: gwc_service
+    geoserver.security.layergroup-containmentcache: true
+    ---
+    spring.config.activate.on-profile: webui_service
+    geoserver:
+      security:
+        layergroup-containmentcache: true
+        gateway-shared-auth.server: true
+      web-ui:
+        acl.enabled: ${geoserver.acl.enabled}
+        file-browser.hide-file-system: ${webui.hide-filesystem:false}
+        # These are all default values, here just for reference. You can omit them and add only the ones to disable or further configure
+        security.enabled: true
+        wfs.enabled: ${webui.wfs.enabled:true}
+        wms.enabled: ${webui.wms.enabled:true}
+        wcs.enabled: ${webui.wcs.enabled:true}
+        wps.enabled: ${webui.wps.enabled:true}
+        gwc:
+          enabled: ${gwc.enabled:true}
+          capabilities:
+            tms: ${gwc.services.tms:true}
+            wmts: ${gwc.services.wmts:true}
+            wmsc: ${gwc.services.wms:true}
+        extensions:
+          importer.enabled: ${webui.importer.enabled:false}
+        demos:
+          enabled: ${webui.demos.enabled:true}
+          wps-request-builder: true
+          wcs-request-builder: true
+          demo-requests: true
+          srs-list: true
+          reprojection-console: true
+          layer-preview-page:
+            enabled: ${webui.preview.enabled:true}
+            common-formats:
+              open-layers: true
+              gml: true
+              kml: true
+        tools:
+          enabled: ${webui.tools.enabled:true}
+          resource-browser: true
+          catalog-bulk-load: true
+    ---
+    spring.config.activate.on-profile: geonode
+    # Access Control List client config. Replaces GeoFence
+    acl.enabled: true
+    ---
+    #############################################
+    spring.config.activate.on-profile: local
+    ## `local` profile, used for development only.
+    ## Match ports to the ones defined in the development docker compose file
+    ## allows to run an application from the IDE and join the cluster, providing environment
+    ## variables that otherwise would be given by docker-compose.yml.
+    ## It is safe to remove this profile completely in a production deployment config.
+    rabbitmq.host: localhost
+    rabbitmq.port: 5672
+    eureka.server.url: http://localhost:8761/eureka
+    config.server.url: http://localhost:8888
+
+    acl.url: http://localhost:9000/acl/api
+
+    jdbcconfig.url: jdbc:postgresql://localhost:54321/geoserver_config
+    jdbcconfig.username: geoserver
+    jdbcconfig.password: geo5erver
+
+    pgconfig.host: localhost
+    pgconfig.port: 8432
+
+    jndi:
+      datasources:
+          postgis.enabled: true
+          postgis.url: jdbc:postgresql://localhost:6432/postgis
+
+    GEOWEBCACHE_CACHE_DIR: ${GEOSERVER_DATA_DIR:/tmp}/gwc
+
+kind: ConfigMap
+metadata:
+  name: geoserver-configmap
+  namespace: KUBERNETES-NAMESPACE
+

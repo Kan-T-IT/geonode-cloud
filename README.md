@@ -148,7 +148,9 @@ SERVER_PUBLIC_IP=YOU.RPU.BLI.CIP               # the public ipv4 of the server
 GEONODE_PASSWORD=admin                         # password for geonode admin user 
 GEOSERVER_PASSWORD=geoserver                   # password for geoserver admin user
 ```
+
 7. Run `./install.sh` and enjoy.
+
 
 ---
 
@@ -156,13 +158,16 @@ GEOSERVER_PASSWORD=geoserver                   # password for geoserver admin us
 
 ### Pre requisites
 
+
 Ensure that the EKS cluster is up and running and configured with the following:
 
 1. **OIDC Provider and IAM**: Configure the OIDC provider for the EKS cluster.
 2. **IAM Service Account for AWS Load Balancer Controller**: Create the IAM service account and attach the necessary policies.
 3. **Necessary Addons**: Install AWS Load Balancer Controller and EBS CSI Driver.
 
+
 ### Deploy of Kubernetes Resources
+
 
 To deploy the necessary resources on EKS, follow this order:
 
@@ -191,4 +196,6 @@ To deploy the necessary resources on EKS, follow this order:
 - **Ingress**
   - Finally, apply `geonode-ingress.yaml` in `configs/ingress` to expose services to the outside.
 
+
 After following these steps, verify the status of your pods and services.
+

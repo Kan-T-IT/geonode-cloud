@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui
+  namespace: KUBERNETES-NAMESPACE
+  labels:
+    app: geoserver
+    component: webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoserver
+      component: webui
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: geoserver
+        component: webui
+    spec:
+      containers:
+      - env:
+        - name: RABBITMQ_PORT_5672_TCP
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_PORT_5672_TCP
+              name: geoserver--env
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_PORT
+              name: geoserver--env
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_PROFILES_ACTIVE
+              name: geoserver--env
+        image: geoservercloud/geoserver-cloud-webui:1.9-SNAPSHOT
+        imagePullPolicy: "IfNotPresent"
+        name: webui
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "200m"
+          limits:
+            cpu: "4000m"
+            memory: "6Gi"
+        volumeMounts:
+        - name: geowebcache-data
+          mountPath: /data/geowebcache
+        - name: jndi
+          mountPath: "/etc/geoserver/jndi.yml"
+          subPath: "jndi.yaml"
+        - name: geoserver
+          mountPath: "/etc/geoserver/geoserver.yml"
+          subPath: "geoserver.yaml"
+        - name: statics
+          mountPath: /mnt/volumes/statics
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: geowebcache-data
+        persistentVolumeClaim:
+          claimName: geowebcache-data
+      - name: jndi
+        configMap:
+          name: jndi-configmap
+      - name: geoserver
+        configMap:
+          name: geoserver-configmap
+      - name: statics
+        persistentVolumeClaim:
+          claimName: statics
+status: {}

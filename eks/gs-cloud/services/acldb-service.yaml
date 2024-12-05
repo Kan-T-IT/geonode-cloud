@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: KUBERNETES-NAMESPACE
+  name: acldb
+  labels:
+    component: acldb
+spec:
+  selector:
+    component: acldb
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP  # Se asegura que solo sea accesible dentro del clúster

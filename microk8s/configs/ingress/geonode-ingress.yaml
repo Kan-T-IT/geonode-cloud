@@ -1,0 +1,96 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: geonode-network
+  namespace: KUBERNETES-NAMESPACE
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/client-max-body-size: "500M"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600s"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500M"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600s"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600s"
+
+    # Deshabilitar el redireccionamiento
+    nginx.ingress.kubernetes.io/proxy-redirect: "off"
+
+    # Configuración de CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "false"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Accept, Authorization, Origin, User-Agent"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "Content-Range, Content-Length, Accept-Ranges"
+
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+
+
+
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - 0.0.0.0
+    secretName: letsencrypt
+  rules:
+  - host: kube-qa.kan.com.ar
+    http:
+      paths:
+      - path: /static/mapstore
+        pathType: Prefix
+        backend:
+          service:
+            name: mapstore
+            port:
+              number: 8081
+
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /static/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /static/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|tif|tiff|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /uploaded/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /uploaded/.*(html|js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|tif|tiff|wav|bmp|ttf|rtf|swf|ico|flv|txt|woff|woff2|svg|xml)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: django
+            port:
+              number: 8000
+
+      - path: /celery/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: celery
+            port:
+              number: 8001

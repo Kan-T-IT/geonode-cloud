@@ -1,0 +1,55 @@
+apiVersion: v1
+data:
+  acl.yaml: |-
+    # spring.config.import:
+    # - jndi.yml
+
+    jndi.acldb.enabled: true
+    acl.db.jndiName: java:comp/env/jdbc/acl
+    acl.db.schema: acl
+
+    geoserver.acl.security:
+      internal:
+        enabled: true
+        users:
+          admin:
+            enabled: true
+            admin: true
+            # password is a bcrypt encoded value for s3cr3t
+            password: "${acl.admin.password:{bcrypt}$2a$10$FE62N3ejbKm56EX5VrtSQeDDka8YjwgjwF9sSEKbatGZuZ8e7S9v.}"
+            #for a plain-text password (e.g. coming from a docker or kubernetes secret,
+            # use the {noop} prefix, as in: password: "{noop}plaintextpwd}", or password: "{noop}${ACL_ADMIN_PASSWORD}"
+          user:
+            enabled: true
+            admin: false
+            # password is a bcrypt encoded value for s3cr3t
+            password: "{bcrypt}$2a$10$eMyaZRLZBAZdor8nOX.qwuwOyWazXjR2hddGLCT6f6c382WiwdQGG"
+
+
+    logging:
+      level:
+        root: warn
+        org.geoserver.acl: info
+        org.geoserver.cloud.config: info
+        org.springframework.jdbc.support: info
+        org.springframework.security: debug
+
+    jndi:
+      datasources:
+        pgconfig:
+          enabled: true
+          schema: acl
+          wait-for-it: true
+          wait-timeout: 100
+          url: jdbc:postgresql://gndatabase:5432/pgconfig
+          username: pgconfig
+          password: pgconfig
+          maximum-pool-size: 10
+          minimum-idle: 0
+          connection-timeout: 5000
+          idle-timeout: 120000
+kind: ConfigMap
+metadata:
+  name: acl-configmap
+  namespace: KUBERNETES-NAMESPACE
+

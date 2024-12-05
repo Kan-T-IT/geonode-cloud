@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  values.yaml: |-
+    geoserver.acl.enabled: true
+    geoserver.acl.client.basePath: http://acl:8080/acl/api
+    geoserver.acl.client.username: admin
+    geoserver.acl.client.password: s3cr3t
+    geoserver.acl.client.debug: true
+
+    geoserver.web-ui.acl.enabled: true
+    geoserver.web-ui.security.logout-url: /logout
+
+    geoserver.backend.data-directory.enabled: false
+    geoserver.backend.data-directory.location: /opt/app/data_directory
+
+    gwc.enabled: true
+    gwc.cache-directory: /data/geowebcache
+kind: ConfigMap
+metadata:
+
+  name: values-configmap
+  namespace: KUBERNETES-NAMESPACE

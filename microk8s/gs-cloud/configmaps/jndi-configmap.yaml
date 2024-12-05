@@ -1,0 +1,61 @@
+apiVersion: v1
+data:
+  jndi.yaml: |-
+    # This file is imported from geoserver.yml and allows to configure multiple JNDI Datasources
+    # using standard spring-boot externalized configuration, without having to tweak
+    # application container specific fongiuration files (i.e. tomcat, jetty, etc. xml config files)
+    #
+    # Each JNDI datasource configuration properties is named after the jndi.datasources property,
+    # has the following attribtues:
+    #
+    # * enabled: Whether the datasource shall be configured. Defaults to true.
+    # * wait-for-it: Whether to wait for the datasource to be ready (connection succeed) at startup
+    # * wait-timeout: Timeout in seconds to wait for the datasource to be ready. Defaults to 60
+    # * url: JDBC connection url. Required.
+    # * username: Database username to connect as
+    # * password: Database user password
+    # * driver-class-name: JDBC driver class name. Optional, should be inferred from the URL
+    # * maximum-pool-size: Maximum number of connections in the pool. Defaults to 10.
+    # * minimum-idle: Minimum number of connections kept alive in the pool. Defaults to 2.
+    # * connection-timeout: Connection timeout in milliseconds. Defaults to 250, which is also the minimum allowed value
+    # * idle-timeout: Maximum time in milliseconds to keep a connection alive while idle. Defaults to 60000.
+    #
+    # The data source names will be bound as java:comp/env/jdbc/<name> (e.g. java:comp/env/jdbc/ds1 for
+    # a datasource called jndi.datasources.ds1):
+    #
+    jndi:
+      datasources:
+        pgconfig:
+          enabled: true
+          schema: pgconfig
+          wait-for-it: true
+          wait-timeout: 100
+          url: jdbc:postgresql://gndatabase:5432/pgconfig
+          username: pgconfig
+          password: pgconfig
+          maximum-pool-size: 10
+          minimum-idle: 0
+          connection-timeout: 5000
+          idle-timeout: 120000
+    geoserver:
+      acl.enabled: true
+      backend:
+        pgconfig:
+          enabled: true
+          initialize: true
+          schema: pgconfig
+          create-schema: true
+          datasource:
+            jndi-name: java:comp/env/jdbc/pgconfig
+    logging:
+      level:
+        root: WARN
+        org.geoserver.platform: ERROR
+        org.geoserver.cloud: INFO
+        org.geoserver.cloud.config.factory: INFO
+        org.springframework.test: ERROR
+kind: ConfigMap
+metadata:
+  name: jndi-configmap
+  namespace: KUBERNETES-NAMESPACE
+
